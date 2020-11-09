@@ -13,7 +13,17 @@ import org.jboss.logging.Logger;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.binder.kafka.KafkaClientMetrics;
+import io.quarkus.runtime.ShutdownEvent;
 
+/**
+ * Observer to create and register KafkaClientMetrics.
+ *
+ * This observer uses only classes from "kafka-clients" and none from "kafka-streams
+ *
+ * Must be separated from KafkaStreamsEventObserver, because they use different dependencies and if only kafka-client is used,
+ * the
+ * classes from kafka-streams aren't loaded.
+ */
 @ApplicationScoped
 public class KafkaEventObserver {
     private static final Logger log = Logger.getLogger(KafkaEventObserver.class);
@@ -67,6 +77,10 @@ public class KafkaEventObserver {
         } else {
             tryToClose(metrics);
         }
+    }
+
+    void onStop(@Observes ShutdownEvent event) {
+        clientMetrics.values().forEach(this::tryToClose);
     }
 
     void tryToClose(AutoCloseable c) {
