@@ -1,10 +1,8 @@
 package io.quarkus.it.kafka.streams;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-
 import javax.inject.Inject;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.QuarkusTestResource;
@@ -19,7 +17,7 @@ public class KafkaStreamsCdiEventTest {
 
     @Test
     void testEventShouldBePublished() {
-        assertThat("There should be at least one event for creating KafakStreams in the producder.",
-                eventCounter.getEventCount(), greaterThanOrEqualTo(1));
+        Assertions.assertEquals(1, eventCounter.getEventCount(),
+                "There should be one event for creating KafakStreams in the producder.");
     }
 }

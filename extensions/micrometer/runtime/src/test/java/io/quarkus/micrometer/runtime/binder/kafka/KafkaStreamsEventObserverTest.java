@@ -11,16 +11,11 @@ class KafkaStreamsEventObserverTest {
     @Test
     void testKafkaStreamsMetricsClosedAfterShutdownEvent() {
         KafkaStreamsEventObserver sut = new KafkaStreamsEventObserver();
-
-        KafkaStreamsMetrics firstClientMetrics = Mockito.mock(KafkaStreamsMetrics.class);
-        KafkaStreamsMetrics secondClientMetrics = Mockito.mock(KafkaStreamsMetrics.class);
-        sut.kafkaStreamsMetrics.put(firstClientMetrics, firstClientMetrics);
-        sut.kafkaStreamsMetrics.put(secondClientMetrics, secondClientMetrics);
+        sut.kafkaStreamsMetrics = Mockito.mock(KafkaStreamsMetrics.class);
 
         sut.onStop(new ShutdownEvent());
 
-        Mockito.verify(firstClientMetrics).close();
-        Mockito.verify(secondClientMetrics).close();
+        Mockito.verify(sut.kafkaStreamsMetrics).close();
     }
 
 }
