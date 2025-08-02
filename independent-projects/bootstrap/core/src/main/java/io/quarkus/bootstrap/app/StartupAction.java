@@ -13,6 +13,8 @@ public interface StartupAction {
      */
     void overrideConfig(Map<String, String> config);
 
+    void startDevServices();
+
     RunningQuarkusApplication run(String... args) throws Exception;
 
     QuarkusClassLoader getClassLoader();

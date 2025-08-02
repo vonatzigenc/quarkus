@@ -204,6 +204,9 @@ public class QuarkusTestExtension extends AbstractJvmQuarkusTestExtension
                     .getCuratedApplication();
             Path testClassLocation = getTestClassesLocation(requiredTestClass, curatedApplication);
 
+            //start DevServices before creating TestResourceManager
+            startupAction.startDevServices();
+
             // Do we need the augmentation classloader as the TCCL?
             //must be done after the TCCL has been set
             Class<?> testResourceManagerClass = startupAction.getClassLoader().loadClass(TestResourceManager.class.getName());

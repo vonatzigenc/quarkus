@@ -292,6 +292,11 @@ public class StartupActionImpl implements StartupAction {
         RuntimeOverrideConfigSource.setConfig(runtimeClassLoader, config);
     }
 
+    @Override
+    public void startDevServices() {
+        startDevServices(devServicesRegistry, devServicesResults, devServicesCustomizers);
+    }
+
     private void startDevServices(DevServicesRegistryBuildItem devServicesRegistry,
             List<DevServicesResultBuildItem> devServicesRequests,
             List<DevServicesCustomizerBuildItem> customizers) {
@@ -301,6 +306,8 @@ public class StartupActionImpl implements StartupAction {
                 throw new IllegalStateException("Dev services cannot be started without an augmentation class loader.");
             }
             devServicesRegistry.startAll(devServicesRequests, customizers, augmentClassLoader);
+            //Update DevServiceProperties after startup
+            this.devServicesProperties.putAll(devServicesRegistry.getConfigForAllRunningServices());
         }
         if (InitialConfigurator.DELAYED_HANDLER.isActivated()) {
             InitialConfigurator.DELAYED_HANDLER.buildTimeComplete();
